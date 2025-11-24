@@ -27,7 +27,7 @@ vdd                                                                             
 5. Now set hostname on the system and make an entry in /etc/hosts
 ```bash
 hostnamectl set-hostname cephsno
-echo "192.168.122.120 cephsno.example.com cephsno" >> /etc/hosts
+echo "192.168.1.5 cephsno.example.com cephsno" >> /etc/hosts
 ```
 6. Register the system with Red Hat and enable below repository
 ```bash
@@ -44,7 +44,7 @@ ip a
 ```
 9. Now run the cephbootstrap command with Node's IP address and network.
 ```bash
-cephadm bootstrap --cluster-network 192.168.122.0/24 --mon-ip 192.168.122.120 --registry-url registry.redhat.io --registry-username 'my-redhatuser --registry-password 'mypassword' --dashboard-password-noupdate --initial-dashboard-user admin --initial-dashboard-password redhat --allow-fqdn-hostname --single-host-defaults
+cephadm bootstrap --cluster-network 192.168.1.0/24 --mon-ip 192.168.1.5 --registry-url registry.redhat.io --registry-username 'my-redhatuser --registry-password 'mypassword' --dashboard-password-noupdate --initial-dashboard-user admin --initial-dashboard-password redhat --allow-fqdn-hostname --single-host-defaults
 Ceph Dashboard is now available at:
 
 	     URL: https://cephsno.example.com:8443/
@@ -70,6 +70,11 @@ For more information see:
 	https://docs.ceph.com/en/pacific/mgr/telemetry/
 
 ```
+Run the Following Command
+```bash
+sudo /sbin/cephadm shell
+```
+
 10. Check cluster status
 ```bash
 ceph -s
