@@ -11,7 +11,9 @@ sudo qemu-img create -f qcow2 /var/lib/libvirt/images/osd3.qcow2 100G
 ![Adding Disks](pictures/vm-disks.png)
 5. After attaching the disks verify that disks are listed in VM. In below output vdb,vdc and vdd are listed.
 ```bash
- lsblk 
+ lsblk
+ ```
+ ```
 NAME                                                                                                  MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 sr0                                                                                                    11:0    1  1024M  0 rom  
 vda                                                                                                   252:0    0   500G  0 disk 
@@ -27,7 +29,7 @@ vdd                                                                             
 5. Now set hostname on the system and make an entry in /etc/hosts
 ```bash
 hostnamectl set-hostname cephsno
-echo "192.168.122.120 cephsno.example.com cephsno" >> /etc/hosts
+echo "192.168.1.5 cephsno.example.com cephsno" >> /etc/hosts
 ```
 6. Register the system with Red Hat and enable below repository
 ```bash
@@ -42,9 +44,11 @@ dnf install podman cephadm ceph-common ceph-base -y
 ```
 ip a
 ```
-9. Now run the cephbootstrap command with Node's IP address and network.
+9. Now run the ceph bootstrap command with Node's IP address and network.
 ```bash
-cephadm bootstrap --cluster-network 192.168.122.0/24 --mon-ip 192.168.122.120 --registry-url registry.redhat.io --registry-username 'my-redhatuser --registry-password 'mypassword' --dashboard-password-noupdate --initial-dashboard-user admin --initial-dashboard-password redhat --allow-fqdn-hostname --single-host-defaults
+cephadm bootstrap --cluster-network 192.168.1.0/24 --mon-ip 192.168.1.5 --registry-url registry.redhat.io --registry-username 'my-redhatuser' --registry-password 'mypassword' --dashboard-password-noupdate --initial-dashboard-user admin --initial-dashboard-password redhat --allow-fqdn-hostname --single-host-defaults
+```
+```Output
 Ceph Dashboard is now available at:
 
 	     URL: https://cephsno.example.com:8443/
@@ -70,9 +74,15 @@ For more information see:
 	https://docs.ceph.com/en/pacific/mgr/telemetry/
 
 ```
+Go to the ceph terminal 
+```bash
+sudo /sbin/cephadm shell
+```
 10. Check cluster status
 ```bash
 ceph -s
+```
+``` 
   cluster:
     id:     0e2f3af0-c841-11f0-a6ce-525400fb6063
     health: HEALTH_WARN
@@ -94,6 +104,8 @@ ceph orch daemon add osd cephsno:/dev/vdd
 12. Check status again, it will show 3 OSD.
 ```bash
 ceph -s
+```
+```
   cluster:
     id:     0e2f3af0-c841-11f0-a6ce-525400fb6063
     health: HEALTH_OK
@@ -106,6 +118,8 @@ ceph -s
 13. Also run lsblk and check the ceph initiated under the storage disk.
 ```bash
 lsblk 
+```
+```
 NAME                                                                                                  MAJ:MIN RM   SIZE RO TYPE MOUNTPOINTS
 sr0                                                                                                    11:0    1  1024M  0 rom  
 vda                                                                                                   252:0    0   500G  0 disk 
